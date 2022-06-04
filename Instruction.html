@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instructions of Game</title>
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    />
+  </head>
+  <style>
+  	 .menu{
+  width: 20%;
+  height: 10px;
+  margin-top: 610px;
+  margin-left: 580px;
+  margin-bottom:  570px;
+    }
+
+  	h1 {text-align: center;}
+  	#canvas1 {
+  width: 600px;
+  height:600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+	}
+
+  </style>
+  <body>
+  	<canvas id="canvas1"></canvas>
+  	<script type="text/javascript">
+		const canvas = document.getElementById("canvas1");
+		const ctx = canvas.getContext("2d");
+		const CANVAS_WIDTH =canvas.width = 600;
+		const CANVAS_HEIGHT =canvas.height = 600;
+
+		const keys = [];
+		const player = {
+			x: 300,
+			y: 200,
+			width: 48,
+			height: 65,
+			frameX: 0,
+			frameY: 0,
+			speed: 9,
+			moving: false
+
+		};
+
+		const playerImage= new Image();
+		playerImage.src = "dodo.png";
+		const background = new Image();
+		background.src = 'background1.png';
+
+
+		function drawSprite(img, sX, sY, sW, sH,  dX, dY, dW, dH){
+			ctx.drawImage(img, sX, sY, sW, sH, dX, dY, dW, dH);
+		}
+
+		let fps, fpsInterval, startTime, now, then, elapsed;
+		function startAnimating(fps){
+			fpsInterval = 1000/fps;
+			then = Date.now();
+			animate();
+
+		}
+		startAnimating(15);
+
+		function animate(){
+			requestAnimationFrame(animate);
+			now =Date.now();
+			elapsed = now - then;
+			if(elapsed > fpsInterval){
+				then=now - (elapsed % fpsInterval);
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+			
+			drawSprite(playerImage, player.width * player.frameX, player.height * player.frameY, player.width, player.height, player.x, player.y, player.width*2, player.height*2);
+			movePlayer();
+			handlePlayerFrame();
+
+			}
+
+		}
+
+		window.addEventListener("keydown" , function(e){
+			keys[e.keyCode] = true;
+			player.moving = true;
+
+		});
+		window.addEventListener("keyup", function(e){
+			delete keys[e.keyCode];
+			player.moving = false;
+		});
+
+		function movePlayer(){
+			//arrow right
+			if (keys[38] && player.y > 100){
+				player.y -=player.speed;
+				player.frameY = 0;
+				player.moving = true;
+
+			}
+
+			//arrow left
+			if (keys[37] && player.x > 0){
+				player.x -= player.speed;
+				player.frameY = 3;
+				player.moving = true;
+
+			}
+			
+
+			//arrow down
+			if (keys[40] && player.y  <canvas.height - player.height){
+				player.y +=player.speed;
+				player.frameY = 2;
+				player.moving = true;
+
+			}
+			if (keys[39] && player.x <canvas.width - player.width){
+				player.x +=player.speed;
+				player.frameY = 1;
+				player.moving = true;
+
+			}
+
+
+		}
+
+		function handlePlayerFrame(){
+			if(player.frameX < 2 && player.moving) player.frameX++
+				else player.frameX = 0
+		}
+
+		</script>
+		<h1> Instructions </h1>
+		 <p style="text-align:left;">Learn for free</p>
+	</body>
+	 <div class="menu">
+    <button class="btn btn-primary btn-block" onclick="location.href = 'play.html';" > Play Game </button>
+  </div>
+</html>
